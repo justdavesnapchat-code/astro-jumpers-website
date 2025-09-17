@@ -405,7 +405,7 @@
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app); auth = getAuth(app);
-                scoresCollection = collection(db, `scores`);
+                scoresCollection = collection(db, `scores`); 
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
                 else await signInAnonymously(auth);
                 listenForScores(); 
@@ -560,7 +560,4 @@
 
 </body>
 </html>
-
-
-
 
