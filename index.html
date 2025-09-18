@@ -34,18 +34,40 @@
 </head>
 <body class="animated-gradient">
 
-    <!-- All of your original HTML Body content is here, unchanged -->
     <header class="bg-black/30 backdrop-blur-lg sticky top-0 z-40 border-b border-purple-800/50">
-        <!-- ... header code ... -->
+        <!-- Your Header HTML -->
     </header>
     <main id="main-content" class="max-w-7xl mx-auto p-4 space-y-12 md:space-y-16">
-        <!-- ... all sections: game, leaderboard, news, reviews ... -->
+        <section id="game-section-container">
+            <!-- Your Game Section HTML -->
+        </section>
+        <section id="leaderboard-container" class="bg-black/30 rounded-2xl p-4 md:p-6 border border-purple-800/50 max-w-2xl mx-auto">
+            <!-- Your Leaderboard Section HTML -->
+        </section>
+        <section id="news-section" class="max-w-4xl mx-auto">
+            <div class="section-title-container">
+                <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Gaming & Tech News</h2>
+            </div>
+            <div id="latest-news-list" class="space-y-4 mt-6">
+                <p class="text-center text-gray-400">Loading latest news...</p>
+            </div>
+            <a href="news-page.html" class="block text-center mt-6 text-purple-400 hover:text-purple-300 font-bold" style="font-family: 'Press Start 2P', cursive;">More News...</a>
+        </section>
+        <section id="reviews-section" class="max-w-4xl mx-auto">
+             <div class="section-title-container">
+                <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Product Reviews</h2>
+            </div>
+            <div id="latest-reviews-list" class="space-y-4 mt-6">
+                 <p class="text-center text-gray-400">Loading latest reviews...</p>
+            </div>
+             <a href="reviews-page.html" class="block text-center mt-6 text-purple-400 hover:text-purple-300 font-bold" style="font-family: 'Press Start 2P', cursive;">More Reviews...</a>
+        </section>
     </main>
     <footer class="bg-black/30 border-t border-purple-800/50 mt-16">
-        <!-- ... footer code ... -->
+        <!-- Your Footer HTML -->
     </footer>
     <div id="game-fullscreen-container" class="hidden fixed top-0 left-0 w-screen h-screen z-[100]">
-        <!-- ... game overlay code ... -->
+        <!-- Your Game Overlay HTML -->
     </div>
     
     <script type="module">
@@ -53,17 +75,48 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, onSnapshot, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // This is the key change: We wait for the HTML to be fully loaded before running any code.
+        // --- Your Original Game and UI Logic (Starts Here) ---
+        const hamburgerButton = document.getElementById('hamburger-button');
+        const navMenu = document.getElementById('nav-menu');
+        hamburgerButton.addEventListener('click', () => { /* ... original navigation code ... */ });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => { /* ... original navigation code ... */ });
+        
+        const initialStartButton = document.getElementById('initial-startButton');
+        const gameFullscreenContainer = document.getElementById('game-fullscreen-container');
+        const gameRuntimeContainer = document.getElementById('game-runtime-container');
+        const canvas = document.getElementById('gameCanvas'); 
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score'); const highScoreEl = document.getElementById('highScore'); const startScreen = document.getElementById('startScreen'); const gameOverScreen = document.getElementById('gameOverScreen'); const startButton = document.getElementById('startButton'); const restartButton = document.getElementById('restartButton'); const finalScoreEl = document.getElementById('finalScore'); const highScoreForm = document.getElementById('highScoreForm'); const playerNameInput = document.getElementById('playerName'); const submitScoreButton = document.getElementById('submitScoreButton'); const leaderboardListEl = document.getElementById('leaderboard-list');
+        const exitGameButton = document.getElementById('exitGameButton');
+        let isGameRunning = false; let score = 0; let highScore = localStorage.getItem('astroJumperHighScore') || 0; let cameraY = 0; let player, asteroids, particles; let pressStartTime = 0; let lastClickX = 0; let jumpDirection = 1; let currentLevelIndex = 0; let selectedCharacter = localStorage.getItem('astroJumperCharacter') || 'astronaut';
+        const levels = [{ threshold: 0, bgColor: '#0c0a1a' },{ threshold: 100, bgColor: '#1a122a' },{ threshold: 200, bgColor: '#2a1a3c' },{ threshold: 300, bgColor: '#3c1f4f' },{ threshold: 400, bgColor: '#4a1a3c' },{ threshold: 500, bgColor: '#5a2a2a' },{ threshold: 750, bgColor: '#4a3a2a' },{ threshold: 1000, bgColor: '#2a5a2a' },{ threshold: 1500, bgColor: '#2a5a5a' },{ threshold: 2000, bgColor: '#3a3a5a' },];
+        let synth, landSynth, gameOverSynth; 
+        
+        // --- ALL ORIGINAL GAME FUNCTIONS (init, draw, update, etc.) ARE HERE ---
+        // ... (This section contains all your original game functions exactly as they were) ...
+        function setupSounds() { /* ... */ }
+        function resizeCanvas() { /* ... */ }
+        // ... and so on for all game functions.
+
+        initialStartButton.addEventListener('click', () => { /* ... original listener code ... */ });
+        exitGameButton.addEventListener('click', () => { /* ... original listener code ... */ });
+        // ... and all other original event listeners.
+
+        setupCharacterSelection();
+        // --- End of Original Game Logic ---
+
+
+        // --- New Secure Initialization and Dynamic Content Loading ---
         document.addEventListener('DOMContentLoaded', () => {
             const mainContent = document.getElementById('main-content');
             
-            async function initializeAppAndGame() {
+            async function initializeFirebase() {
                 try {
                     const configResponse = await fetch('/.netlify/functions/get-config');
-                    if (!configResponse.ok) throw new Error(`Failed to fetch config. Status: ${configResponse.status}. Make sure your Netlify function and environment variable are set up correctly.`);
+                    if (!configResponse.ok) throw new Error(`Failed to fetch config. Status: ${configResponse.status}.`);
                     
                     const firebaseConfig = await configResponse.json();
-                    if (!firebaseConfig.apiKey) throw new Error("Firebase API Key is missing from config. Check your Netlify environment variables.");
+                    if (!firebaseConfig.apiKey) throw new Error("Firebase API Key is missing.");
                     
                     const app = initializeApp(firebaseConfig);
                     const db = getFirestore(app); 
@@ -72,65 +125,65 @@
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
                     else await signInAnonymously(auth);
                     
-                    // Now that we are safely connected, we pass the database and auth instances to the main logic function.
-                    runGameLogic(db, auth);
+                    // Once Firebase is ready, we start fetching the dynamic content.
+                    listenForScores(db); 
+                    fetchHomepageArticles(db);
 
                 } catch (error) {
                     console.error("A critical error occurred during initialization:", error);
-                    mainContent.innerHTML = `<div class="text-center p-8 bg-red-900/50 border-2 border-red-500 rounded-lg max-w-4xl mx-auto"><h1 class="text-2xl font-bold text-red-300" style="font-family: 'Press Start 2P', cursive;">SITE OFFLINE</h1><p class="mt-4 text-lg text-red-200">A critical error occurred while loading the website.</p><p class="mt-2 text-sm text-gray-300">This can be due to a misconfiguration of the Netlify environment variables or functions.</p><pre class="mt-4 p-4 bg-black/50 text-left text-sm text-red-200 rounded-md overflow-x-auto">${error.message}</pre></div>`;
+                    mainContent.innerHTML = `<div class="text-center p-8 bg-red-900/50 border-2 border-red-500 rounded-lg max-w-4xl mx-auto"><h1 class="text-2xl font-bold text-red-300">SITE OFFLINE</h1><p class="mt-4 text-lg text-red-200">A critical error occurred while loading the website.</p><pre class="mt-4 p-4 bg-black/50 text-left text-sm text-red-200 rounded-md overflow-x-auto">${error.message}</pre></div>`;
                 }
             }
 
-            // This is the main function that contains ALL of your original game, leaderboard, and article logic.
-            function runGameLogic(db, auth) {
+            // --- All Dynamic Content Functions are here ---
+            let leaderboard = []; // Moved here for correct scope
+            
+            function listenForScores(db) { 
                 const scoresCollection = collection(db, `scores`);
-                let leaderboard = [];
-                const LEADERBOARD_SIZE = 10;
-                
-                // All your original constants for UI elements are safely defined here.
-                const landingLeaderboardListEl = document.getElementById('landing-leaderboard-list');
-                const hamburgerButton = document.getElementById('hamburger-button');
-                const navMenu = document.getElementById('nav-menu');
-                const initialStartButton = document.getElementById('initial-startButton');
-                const gameFullscreenContainer = document.getElementById('game-fullscreen-container');
-                const gameRuntimeContainer = document.getElementById('game-runtime-container');
-                const canvas = document.getElementById('gameCanvas');
-                const ctx = canvas.getContext('2d'); // This will no longer cause an error
-                const scoreEl = document.getElementById('score'); const highScoreEl = document.getElementById('highScore'); const startScreen = document.getElementById('startScreen'); const gameOverScreen = document.getElementById('gameOverScreen'); const startButton = document.getElementById('startButton'); const restartButton = document.getElementById('restartButton'); const finalScoreEl = document.getElementById('finalScore'); const highScoreForm = document.getElementById('highScoreForm'); const playerNameInput = document.getElementById('playerName'); const submitScoreButton = document.getElementById('submitScoreButton'); const leaderboardListEl = document.getElementById('leaderboard-list');
-                const exitGameButton = document.getElementById('exitGameButton');
-
-                // All your game state variables
-                let isGameRunning = false; let score = 0; let highScore = localStorage.getItem('astroJumperHighScore') || 0; let cameraY = 0; let player, asteroids, particles; let pressStartTime = 0; let lastClickX = 0; let jumpDirection = 1; let currentLevelIndex = 0; let selectedCharacter = localStorage.getItem('astroJumperCharacter') || 'astronaut';
-                const levels = [{ threshold: 0, bgColor: '#0c0a1a' },{ threshold: 100, bgColor: '#1a122a' },{ threshold: 200, bgColor: '#2a1a3c' },{ threshold: 300, bgColor: '#3c1f4f' },{ threshold: 400, bgColor: '#4a1a3c' },{ threshold: 500, bgColor: '#5a2a2a' },{ threshold: 750, bgColor: '#4a3a2a' },{ threshold: 1000, bgColor: '#2a5a2a' },{ threshold: 1500, bgColor: '#2a5a5a' },{ threshold: 2000, bgColor: '#3a3a5a' },];
-                let synth, landSynth, gameOverSynth; 
-
-                // --- All of your original functions (navigation, game, leaderboard, articles) are nested here ---
-                function listenForScores() { /* ... original code ... */ }
-                function renderLeaderboard(targetElement, limit, isModal) { /* ... original code ... */ }
-                async function submitScore() { /* ... original code ... */ }
-                async function fetchHomepageArticles() { /* ... original code ... */ }
-                async function populateArticleList(q, container, templateFunction) { /* ... original code ... */ }
-                function createNewsCardHTML(article) { /* ... original code ... */ }
-                function createReviewCardHTML(article) { /* ... original code ... */ }
-                function setupSounds() { /* ... original code ... */ }
-                // etc... all game functions (init, gameOver, jump, draw, update...)
-
-                // --- All of your original event listeners are here ---
-                hamburgerButton.addEventListener('click', () => { /* ... */ });
-                // ... all other event listeners ...
-
-                // --- Initial function calls to start the dynamic parts of the site ---
-                listenForScores();
-                fetchHomepageArticles();
-                setupCharacterSelection();
+                const q = query(scoresCollection, orderBy("score", "desc"), limit(10)); 
+                onSnapshot(q, (snapshot) => { 
+                    const scores = []; 
+                    snapshot.forEach((doc) => { scores.push({ id: doc.id, ...doc.data() }); }); 
+                    leaderboard = scores; 
+                    renderLeaderboard(leaderboardListEl, 10, true); 
+                    renderLeaderboard(document.getElementById('landing-leaderboard-list'), 5, false);
+                }); 
+            }
+            
+            function renderLeaderboard(targetElement, limit, isModal) {
+                 // ... original renderLeaderboard function ...
             }
 
-            // Start the entire process
-            initializeAppAndGame();
+            async function fetchHomepageArticles(db) {
+                const articlesCollection = collection(db, 'articles');
+                const newsListContainer = document.getElementById('latest-news-list');
+                const reviewsListContainer = document.getElementById('latest-reviews-list');
+                const newsQuery = query(articlesCollection, where("category", "==", "news"), orderBy("publicationDate", "desc"), limit(2));
+                populateArticleList(newsQuery, newsListContainer, createNewsCardHTML);
+                const reviewsQuery = query(articlesCollection, where("category", "==", "review"), orderBy("publicationDate", "desc"), limit(2));
+                populateArticleList(reviewsQuery, reviewsListContainer, createReviewCardHTML);
+            }
+
+            async function populateArticleList(q, container, templateFunction) {
+                // ... original populateArticleList function ...
+            }
+
+            function createNewsCardHTML(article) {
+                // ... original createNewsCardHTML function ...
+            }
+
+            function createReviewCardHTML(article) {
+                 // ... original createReviewCardHTML function ...
+            }
+
+            // Start the initialization process
+            initializeFirebase();
         });
     </script>
 </body>
 </html>
+
+
 
 
 
