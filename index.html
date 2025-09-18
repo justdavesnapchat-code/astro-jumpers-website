@@ -14,6 +14,9 @@
         .btn { font-family: 'Press Start 2P', cursive; background: linear-gradient(45deg, var(--primary-pink), var(--primary-purple)); border: none; padding: 1rem 2rem; border-radius: 8px; font-size: 1.2rem; color: white; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(218, 78, 162, 0.5); }
         .btn:disabled { background: #4b5563; cursor: not-allowed; transform: translateY(0); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .btn-neon { font-family: 'Press Start 2P', cursive; display: inline-block; padding: 10px 20px; border: 2px solid var(--primary-purple); border-radius: 8px; color: var(--primary-purple); text-shadow: 0 0 5px var(--primary-purple); box-shadow: 0 0 10px var(--primary-purple), inset 0 0 10px var(--primary-purple); transition: all 0.2s ease-in-out; text-align: center; }
+        .btn-neon:hover { color: white; background-color: var(--primary-purple); text-shadow: 0 0 10px white; box-shadow: 0 0 20px var(--primary-purple), inset 0 0 5px var(--primary-purple); }
+        .btn-neon:active { transform: scale(0.95); box-shadow: 0 0 5px var(--primary-purple), inset 0 0 15px var(--primary-purple); }
         #gameCanvas { background: var(--background-dark); background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px), radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px); background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; background-position: 0 0, 40px 60px, 130px 270px, 70px 100px; animation: stars 60s linear infinite; cursor: pointer; display: block; transition: background-color 3s ease-in-out; width: 100%; height: 100%; }
         @keyframes stars { from { background-position: 0 0, 40px 60px, 130px 270px, 70px 100px; } to { background-position: 0 1000px, 40px 1060px, 130px 1270px, 70px 1100px; } }
         .hud { position: absolute; left: 50%; transform: translateX(-50%); text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; font-family: 'Press Start 2P', cursive; }
@@ -113,7 +116,9 @@
             <div id="latest-news-list" class="space-y-4 mt-6">
                 <p class="text-center text-gray-400">Loading latest news...</p>
             </div>
-            <a href="news-page.html" class="block text-center mt-6 text-purple-400 hover:text-purple-300 font-bold" style="font-family: 'Press Start 2P', cursive;">More News...</a>
+            <div class="text-center mt-8">
+                <a href="news-page.html" class="btn-neon text-sm">More News...</a>
+            </div>
         </section>
 
         <section id="reviews-section" class="max-w-4xl mx-auto">
@@ -123,7 +128,9 @@
             <div id="latest-reviews-list" class="space-y-4 mt-6">
                  <p class="text-center text-gray-400">Loading latest reviews...</p>
             </div>
-             <a href="reviews-page.html" class="block text-center mt-6 text-purple-400 hover:text-purple-300 font-bold" style="font-family: 'Press Start 2P', cursive;">More Reviews...</a>
+             <div class="text-center mt-8">
+                <a href="reviews-page.html" class="btn-neon text-sm">More Reviews...</a>
+            </div>
         </section>
     </main>
 
@@ -227,7 +234,7 @@
         function applyLevelStyles() { const level = levels[currentLevelIndex]; canvas.style.backgroundColor = level.bgColor; }
         function createAsteroid(previousAsteroid) { const newAsteroid = { width: 100 * (Math.random() * 0.5 + 0.75), height: 20, }; const maxHorizontalDist = Math.min(200, canvas.width * 0.45); const minVerticalDist = 100; const maxVerticalDist = 180; const newY = previousAsteroid.y - (Math.random() * (maxVerticalDist - minVerticalDist) + minVerticalDist); const horizontalOffset = (Math.random() - 0.5) * 2 * maxHorizontalDist; let newX = previousAsteroid.x + horizontalOffset; if (newX < 0) newX = 10; if (newX + newAsteroid.width > canvas.width) newX = canvas.width - newAsteroid.width - 10; newAsteroid.x = newX; newAsteroid.y = newY; return newAsteroid; }
         function startGame() { if (typeof Tone !== 'undefined' && Tone.context.state !== 'running') { Tone.start().then(setupSounds); } isGameRunning = true; startScreen.classList.add('hidden'); gameLoop(); }
-        function gameOver() { isGameRunning = false; playGameOverSound(); if (score > highScore) { highScore = score; localStorage.setItem('astroJumperHighScore', highScore); } finalScoreEl.textContent = score; const lowestLeaderboardScore = leaderboard.length < 10 ? 0 : leaderboard[leaderboard.length - 1].score; if (score > 0 && score >= lowestLeaderboardScore) { highScoreForm.classList.remove('hidden'); playerNameInput.value = localStorage.getItem('astroJumperPlayerName') || ''; } renderLeaderboard(leaderboardListEl, 10, true); gameOverScreen.classList.remove('hidden'); }
+        function gameOver() { isGameRunning = false; playGameOverSound(); if (score > highScore) { highScore = score; localStorage.setItem('astroJumperHighScore', highScore); } finalScoreEl.textContent = score; const lowestLeaderboardScore = leaderboard.length < LEADERBOARD_SIZE ? 0 : leaderboard[leaderboard.length - 1].score; if (score > 0 && score >= lowestLeaderboardScore) { highScoreForm.classList.remove('hidden'); playerNameInput.value = localStorage.getItem('astroJumperPlayerName') || ''; } renderLeaderboard(leaderboardListEl, 10, true); gameOverScreen.classList.remove('hidden'); }
         function jump(pressDuration) { if (player.isGrounded) { const centerZoneWidth = player.width * 1.2; const leftBound = player.x + (player.width / 2) - (centerZoneWidth / 2); const rightBound = player.x + (player.width / 2) + (centerZoneWidth / 2); if (lastClickX < leftBound) { jumpDirection = -1; } else if (lastClickX > rightBound) { jumpDirection = 1; } else { jumpDirection = 0; } const maxPressDuration = 500; const pressRatio = Math.min(pressDuration, maxPressDuration) / maxPressDuration; const jumpStrength = player.minJumpStrength + (player.maxJumpStrength - player.minJumpStrength) * pressRatio; player.velocityY = jumpStrength; player.isGrounded = false; createParticles(player.x + player.width / 2, player.y + player.height, 15, jumpDirection); playJumpSound(); } }
         function createParticles(x, y, count, direction) { for (let i = 0; i < count; i++) { particles.push({ x, y, size: Math.random() * 3 + 1, speedX: (Math.random() - 0.5 + direction * 0.5) * 3, speedY: Math.random() * 3 + 2, life: 50, color: `hsl(${Math.random() * 60 + 180}, 100%, 75%)` }); } }
         function updateParticles() { for (let i = particles.length - 1; i >= 0; i--) { const p = particles[i]; p.x += p.speedX; p.y += p.speedY; p.life--; if (p.life <= 0) particles.splice(i, 1); } }
@@ -301,132 +308,131 @@
         canvas.addEventListener('mousedown', (e) => { if (isGameRunning && player.isGrounded) { pressStartTime = Date.now(); lastClickX = e.clientX; } }); canvas.addEventListener('mouseup', (e) => { if (isGameRunning && pressStartTime > 0) { const d = Date.now() - pressStartTime; jump(d); pressStartTime = 0; } }); canvas.addEventListener('touchstart', (e) => { e.preventDefault(); if (isGameRunning && player.isGrounded) { pressStartTime = Date.now(); lastClickX = e.touches[0].clientX; } }, { passive: false }); canvas.addEventListener('touchend', (e) => { e.preventDefault(); if (isGameRunning && pressStartTime > 0) { const d = Date.now() - pressStartTime; jump(d); pressStartTime = 0; } }, { passive: false });
         
         setupCharacterSelection();
-
-
-        // --- New Secure Initialization and Dynamic Content Loading starts here ---
-        let db, auth;
-        let leaderboard = []; // Ensure this is accessible to the functions below
-        const LEADERBOARD_SIZE = 10;
         
-        async function initializeFirebase() {
+        // --- This is the new, secure initialization and dynamic content loading block ---
+        document.addEventListener('DOMContentLoaded', () => {
+            let db, auth;
+            let leaderboard = []; 
+            const LEADERBOARD_SIZE = 10;
+            const landingLeaderboardListEl = document.getElementById('landing-leaderboard-list');
             const mainContent = document.getElementById('main-content');
-            try {
-                const configResponse = await fetch('/.netlify/functions/get-config');
-                if (!configResponse.ok) throw new Error(`Failed to fetch config. Status: ${configResponse.status}.`);
-                const firebaseConfig = await configResponse.json();
-                if (!firebaseConfig.apiKey) throw new Error("Firebase API Key is missing.");
-                
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app); 
-                auth = getAuth(app);
-                
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-                else await signInAnonymously(auth);
-                
-                listenForScores(); 
-                fetchHomepageArticles();
 
-            } catch (error) {
-                console.error("A critical error occurred during initialization:", error);
-                mainContent.innerHTML = `<div class="text-center p-8 bg-red-900/50 border-2 border-red-500 rounded-lg max-w-4xl mx-auto"><h1 class="text-2xl font-bold text-red-300">SITE OFFLINE</h1><p class="mt-4 text-lg text-red-200">A critical error occurred while loading the website.</p><pre class="mt-4 p-4 bg-black/50 text-left text-sm text-red-200 rounded-md overflow-x-auto">${error.message}</pre></div>`;
-            }
-        }
+            async function initializeFirebase() {
+                try {
+                    const configResponse = await fetch('/.netlify/functions/get-config');
+                    if (!configResponse.ok) throw new Error(`Failed to fetch config. Status: ${configResponse.status}.`);
+                    const firebaseConfig = await configResponse.json();
+                    if (!firebaseConfig.apiKey) throw new Error("Firebase API Key is missing.");
+                    
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app); 
+                    auth = getAuth(app);
+                    
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
+                    else await signInAnonymously(auth);
+                    
+                    listenForScores(); 
+                    fetchHomepageArticles();
 
-        function listenForScores() { 
-            const scoresCollection = collection(db, `scores`);
-            const q = query(scoresCollection, orderBy("score", "desc"), limit(LEADERBOARD_SIZE)); 
-            onSnapshot(q, (snapshot) => { 
-                const scores = []; 
-                snapshot.forEach((doc) => { scores.push({ id: doc.id, ...doc.data() }); }); 
-                leaderboard = scores;
-                const landingListEl = document.getElementById('landing-leaderboard-list');
-                const modalListEl = document.getElementById('leaderboard-list');
-                if (landingListEl) renderLeaderboard(landingListEl, 5, false);
-                if (modalListEl) renderLeaderboard(modalListEl, 10, true);
-            }); 
-        }
-        
-        function renderLeaderboard(targetElement, limit, isModal) {
-            if (!targetElement) return;
-            targetElement.innerHTML = '';
-            const scoresToRender = leaderboard.slice(0, limit);
-            if (scoresToRender.length === 0) {
-                targetElement.innerHTML = `<p class="${isModal ? 'text-xs sm:text-sm' : ''} text-center text-gray-400">Be the first on the leaderboard!</p>`;
-                return;
-            }
-            scoresToRender.forEach((entry, index) => {
-                const entryDiv = document.createElement('div');
-                const rank = index + 1;
-                entryDiv.className = `leaderboard-entry ${isModal ? 'text-sm' : 'text-lg'} ${rank === 1 && !isModal ? 'rank-1' : ''}`;
-                const goldMedal = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFD700"/></svg>`;
-                const silverMedal = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#C0C0C0"/></svg>`;
-                const bronzeMedal = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#CD7F32"/></svg>`;
-                let rankDisplay = (rank === 1 && !isModal) ? goldMedal : (rank === 2 && !isModal) ? silverMedal : (rank === 3 && !isModal) ? bronzeMedal : `#${rank}`;
-                entryDiv.innerHTML = `<span class="w-10 flex items-center justify-center text-yellow-300">${rankDisplay}</span><span class="flex-1 text-left">${entry.name}</span><span class="w-20 text-right text-gray-300">${entry.score}</span>`;
-                targetElement.appendChild(entryDiv);
-            });
-        }
-
-        async function submitScore() {
-            const scoresCollection = collection(db, 'scores');
-            const playerName = playerNameInput.value.trim(); 
-            if (playerName && score > 0) { 
-                submitScoreButton.disabled = true;
-                submitScoreButton.textContent = "Submitting...";
-                try { 
-                    await addDoc(scoresCollection, { name: playerName, score: score, createdAt: new Date() }); 
-                    highScoreForm.classList.add('hidden'); 
-                } catch (e) { 
-                    console.error("Error adding document: ", e); 
-                    alert("Could not submit score. Please try again.");
-                } finally {
-                    submitScoreButton.disabled = false;
-                    submitScoreButton.textContent = "Submit";
+                } catch (error) {
+                    console.error("A critical error occurred during initialization:", error);
+                    mainContent.innerHTML = `<div class="text-center p-8 bg-red-900/50 border-2 border-red-500 rounded-lg max-w-4xl mx-auto"><h1 class="text-2xl font-bold text-red-300">SITE OFFLINE</h1><p class="mt-4 text-lg text-red-200">A critical error occurred while loading the website.</p><pre class="mt-4 p-4 bg-black/50 text-left text-sm text-red-200 rounded-md overflow-x-auto">${error.message}</pre></div>`;
                 }
-            } 
-        }
+            }
 
-        async function fetchHomepageArticles() {
-            const articlesCollection = collection(db, 'articles');
-            const newsListContainer = document.getElementById('latest-news-list');
-            const reviewsListContainer = document.getElementById('latest-reviews-list');
-            const newsQuery = query(articlesCollection, where("category", "==", "news"), orderBy("publicationDate", "desc"), limit(2));
-            populateArticleList(newsQuery, newsListContainer, createNewsCardHTML);
-            const reviewsQuery = query(articlesCollection, where("category", "==", "review"), orderBy("publicationDate", "desc"), limit(2));
-            populateArticleList(reviewsQuery, reviewsListContainer, createReviewCardHTML);
-        }
-
-        async function populateArticleList(q, container, templateFunction) {
-            try {
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p class="text-center text-gray-500">No articles found.</p>`;
+            function listenForScores() { 
+                const scoresCollection = collection(db, `scores`);
+                const q = query(scoresCollection, orderBy("score", "desc"), limit(LEADERBOARD_SIZE)); 
+                onSnapshot(q, (snapshot) => { 
+                    const scores = []; 
+                    snapshot.forEach((doc) => { scores.push({ id: doc.id, ...doc.data() }); }); 
+                    leaderboard = scores;
+                    const modalListEl = document.getElementById('leaderboard-list');
+                    if (landingLeaderboardListEl) renderLeaderboard(landingLeaderboardListEl, 5, false);
+                    if (modalListEl) renderLeaderboard(modalListEl, 10, true);
+                }); 
+            }
+            
+            function renderLeaderboard(targetElement, limit, isModal) {
+                if (!targetElement) return;
+                targetElement.innerHTML = '';
+                const scoresToRender = leaderboard.slice(0, limit);
+                if (scoresToRender.length === 0) {
+                    targetElement.innerHTML = `<p class="${isModal ? 'text-xs sm:text-sm' : ''} text-center text-gray-400">Be the first on the leaderboard!</p>`;
                     return;
                 }
-                container.innerHTML = '';
-                querySnapshot.forEach(doc => { container.innerHTML += templateFunction(doc.data()); });
-            } catch (error) {
-                console.error("Error fetching articles:", error);
-                container.innerHTML = `<p class="text-center text-red-500">Error loading content.</p>`;
+                scoresToRender.forEach((entry, index) => {
+                    const entryDiv = document.createElement('div');
+                    const rank = index + 1;
+                    entryDiv.className = `leaderboard-entry ${isModal ? 'text-sm' : 'text-lg'} ${rank === 1 && !isModal ? 'rank-1' : ''}`;
+                    const goldMedal = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFD700"/></svg>`;
+                    const silverMedal = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#C0C0C0"/></svg>`;
+                    const bronzeMedal = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#CD7F32"/></svg>`;
+                    let rankDisplay = (rank === 1 && !isModal) ? goldMedal : (rank === 2 && !isModal) ? silverMedal : (rank === 3 && !isModal) ? bronzeMedal : `#${rank}`;
+                    entryDiv.innerHTML = `<span class="w-10 flex items-center justify-center text-yellow-300">${rankDisplay}</span><span class="flex-1 text-left">${entry.name}</span><span class="w-20 text-right text-gray-300">${entry.score}</span>`;
+                    targetElement.appendChild(entryDiv);
+                });
             }
-        }
 
-        function createNewsCardHTML(article) {
-            const articleLink = `article.html?slug=${article.slug}`;
-            return `<a href="${articleLink}" class="flex bg-black/20 p-3 rounded-lg border border-transparent hover:border-purple-800/50 transition-colors duration-300"><img src="${article.imageUrl}" alt="${article.title}" class="w-16 h-16 object-cover rounded-md flex-shrink-0"><div class="ml-4 flex-grow"><span class="text-xs font-bold uppercase text-purple-400">${article.category}</span><h3 class="font-bold text-lg text-white mt-1">${article.title}</h3><p class="text-sm text-gray-400 mt-1">${article.summary}</p></div></a>`;
-        }
+            async function submitScore() {
+                const scoresCollection = collection(db, 'scores');
+                const playerName = playerNameInput.value.trim(); 
+                if (playerName && score > 0) { 
+                    submitScoreButton.disabled = true;
+                    submitScoreButton.textContent = "Submitting...";
+                    try { 
+                        await addDoc(scoresCollection, { name: playerName, score: score, createdAt: new Date() }); 
+                        highScoreForm.classList.add('hidden'); 
+                    } catch (e) { 
+                        console.error("Error adding document: ", e); 
+                        alert("Could not submit score. Please try again.");
+                    } finally {
+                        submitScoreButton.disabled = false;
+                        submitScoreButton.textContent = "Submit";
+                    }
+                } 
+            }
 
-        function createReviewCardHTML(article) {
-            const articleLink = `article.html?slug=${article.slug}`;
-            const rating = article.rating || 0;
-            const starsHTML = '★'.repeat(rating) + '<span class="text-gray-500">' + '★'.repeat(5 - rating) + '</span>';
-            return `<a href="${articleLink}" class="flex bg-black/20 p-3 rounded-lg border border-transparent hover:border-purple-800/50 transition-colors duration-300"><div class="flex-shrink-0 relative"><img src="${article.imageUrl}" alt="${article.title}" class="w-32 h-20 md:w-40 md:h-24 object-cover rounded-md"><div class="absolute bottom-2 right-2 bg-black/60 px-2 py-1 rounded backdrop-blur-sm"><div class="star-rating text-lg">${starsHTML}</div></div></div><div class="ml-4 flex-grow"><h3 class="font-bold text-lg md:text-xl text-white">${article.title}</h3><p class="text-sm text-gray-400 mt-1">${article.summary}</p><div class="mt-2 text-xs text-gray-500 space-x-2"><span>By ${article.author}</span></div></div></a>`;
-        }
+            async function fetchHomepageArticles() {
+                const articlesCollection = collection(db, 'articles');
+                const newsListContainer = document.getElementById('latest-news-list');
+                const reviewsListContainer = document.getElementById('latest-reviews-list');
+                const newsQuery = query(articlesCollection, where("category", "==", "news"), orderBy("publicationDate", "desc"), limit(2));
+                populateArticleList(newsQuery, newsListContainer, createNewsCardHTML);
+                const reviewsQuery = query(articlesCollection, where("category", "==", "review"), orderBy("publicationDate", "desc"), limit(2));
+                populateArticleList(reviewsQuery, reviewsListContainer, createReviewCardHTML);
+            }
 
-        // Start the Firebase initialization process
-        initializeFirebase();
+            async function populateArticleList(q, container, templateFunction) {
+                try {
+                    const querySnapshot = await getDocs(q);
+                    if (querySnapshot.empty) {
+                        container.innerHTML = `<p class="text-center text-gray-500">No articles found.</p>`;
+                        return;
+                    }
+                    container.innerHTML = '';
+                    querySnapshot.forEach(doc => { container.innerHTML += templateFunction(doc.data()); });
+                } catch (error) {
+                    console.error("Error fetching articles:", error);
+                    container.innerHTML = `<p class="text-center text-red-500">Error loading content.</p>`;
+                }
+            }
+
+            function createNewsCardHTML(article) {
+                const articleLink = `article.html?slug=${article.slug}`;
+                return `<a href="${articleLink}" class="flex bg-black/20 p-3 rounded-lg border border-transparent hover:border-purple-800/50 transition-colors duration-300"><img src="${article.imageUrl}" alt="${article.title}" class="w-16 h-16 object-cover rounded-md flex-shrink-0"><div class="ml-4 flex-grow"><span class="text-xs font-bold uppercase text-purple-400">${article.category}</span><h3 class="font-bold text-lg text-white mt-1">${article.title}</h3><p class="text-sm text-gray-400 mt-1">${article.summary}</p></div></a>`;
+            }
+
+            function createReviewCardHTML(article) {
+                const articleLink = `article.html?slug=${article.slug}`;
+                const rating = article.rating || 0;
+                const starsHTML = '★'.repeat(rating) + '<span class="text-gray-500">' + '★'.repeat(5 - rating) + '</span>';
+                return `<a href="${articleLink}" class="flex bg-black/20 p-3 rounded-lg border border-transparent hover:border-purple-800/50 transition-colors duration-300"><div class="flex-shrink-0 relative"><img src="${article.imageUrl}" alt="${article.title}" class="w-32 h-20 md:w-40 md:h-24 object-cover rounded-md"><div class="absolute bottom-2 right-2 bg-black/60 px-2 py-1 rounded backdrop-blur-sm"><div class="star-rating text-lg">${starsHTML}</div></div></div><div class="ml-4 flex-grow"><h3 class="font-bold text-lg md:text-xl text-white">${article.title}</h3><p class="text-sm text-gray-400 mt-1">${article.summary}</p><div class="mt-2 text-xs text-gray-500 space-x-2"><span>By ${article.author}</span></div></div></a>`;
+            }
+
+            initializeFirebase();
+        });
     </script>
 </body>
 </html>
-
 
