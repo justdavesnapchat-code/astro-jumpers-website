@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro Jumpers</title> <!-- This title will be updated by JavaScript -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-dark: #0c0a1a;
+            --primary-purple: #6c25be;
+        }
+        body {
+            background-color: var(--background-dark);
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .animated-gradient {
+            background: linear-gradient(300deg, var(--background-dark), #2a1a3c, var(--background-dark));
+            background-size: 200% 200%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .section-title-container {
+            border-bottom: 2px solid;
+            border-image: linear-gradient(to right, transparent, var(--primary-purple), transparent) 1;
+            padding-bottom: 0.5rem;
+        }
+        .star-rating { color: #f59e0b; }
+        .prose-content p { margin-bottom: 1.5rem; line-height: 1.75; }
+        .prose-content img { margin-top: 1.5rem; margin-bottom: 1.5rem; border-radius: 0.5rem; }
+        .prose-content blockquote { border-left: 4px solid var(--primary-purple); padding-left: 1rem; margin-left: 0; font-style: italic; color: #d1d5db; }
+    </style>
+</head>
+<body class="animated-gradient">
+    <!-- HEADER -->
+    <header class="bg-black/30 backdrop-blur-lg sticky top-0 z-40 border-b border-purple-800/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html">
+                        <img src="https://i.imgur.com/aeDmJZR.png" alt="Astro Jumpers Logo" class="h-10">
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="index.html#game-section-container" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Game</a>
+                        <a href="index.html#leaderboard-container" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Leaderboard</a>
+                        <a href="news-page.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">News</a>
+                        <a href="reviews-page.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Reviews</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ARTICLE CONTENT WILL BE RENDERED HERE -->
+    <main id="article-main-content" class="max-w-4xl mx-auto p-4 md:p-8">
+        <p class="text-center text-lg text-gray-400">Loading article...</p>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black/30 border-t border-purple-800/50 mt-16">
+        <!-- Your standard footer HTML goes here -->
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAt8HgMz-d0TIWFjSXtyNnostRs3ZNEbcM",
+            authDomain: "astro-jumpers-leaderboard.firebaseapp.com",
+            projectId: "astro-jumpers-leaderboard",
+            storageBucket: "astro-jumpers-leaderboard.appspot.com",
+            messagingSenderId: "942651270371",
+            appId: "1:942651270371:web:22079e5986822ddd2b91d6"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const mainContent = document.getElementById('article-main-content');
+
+        // --- TEMPLATES ---
+        function getNewsArticleHTML(article) {
+            const pubDate = article.publicationDate.toDate().toLocaleDateString();
+            return `
+                <article>
+                    <header class="mb-8">
+                        <div class="section-title-container">
+                            <p class="text-center text-purple-400 font-bold uppercase tracking-wider" style="font-family: 'Press Start 2P', cursive;">${article.category}</p>
+                            <h1 class="text-3xl md:text-4xl font-bold text-center text-white mt-4">${article.title}</h1>
+                        </div>
+                        <p class="text-center text-gray-400 mt-4">
+                            <span>By ${article.author}</span> | <time>${pubDate}</time>
+                        </p>
+                    </header>
+                    <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-auto rounded-lg shadow-lg mb-8">
+                    <div class="prose-content text-gray-300 space-y-6 text-lg">
+                        ${article.content}
+                    </div>
+                </article>
+            `;
+        }
+
+        function getReviewArticleHTML(article) {
+            const pubDate = article.publicationDate.toDate().toLocaleDateString();
+            const rating = article.rating || 0;
+            const starsHTML = '★'.repeat(rating) + '<span class="text-gray-600">' + '★'.repeat(5 - rating) + '</span>';
+            
+            const prosList = article.pros ? article.pros.split(',').map(pro => `<li>${pro.trim()}</li>`).join('') : '';
+            const consList = article.cons ? article.cons.split(',').map(con => `<li>${con.trim()}</li>`).join('') : '';
+
+            return `
+                 <article>
+                    <header class="mb-8">
+                        <div class="section-title-container">
+                            <h1 class="text-3xl md:text-5xl font-bold text-center text-white" style="font-family: 'Press Start 2P', cursive;">${article.title}</h1>
+                        </div>
+                        <p class="text-center text-gray-400 mt-4">
+                            <span>By ${article.author}</span> | <time>${pubDate}</time>
+                        </p>
+                        <div class="flex justify-center items-center mt-4 star-rating text-3xl">${starsHTML}</div>
+                    </header>
+
+                    <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-auto rounded-lg shadow-lg mb-8">
+                    
+                    <div class="prose-content text-gray-300 space-y-6 text-lg">
+                        ${article.content.split('<!-- PROS/CONS -->')[0] || article.content}
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                            <h3 class="text-xl font-bold text-green-400 flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> PROS
+                            </h3>
+                            <ul class="list-disc list-inside mt-4 space-y-2 text-gray-300">${prosList}</ul>
+                        </div>
+                        <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+                            <h3 class="text-xl font-bold text-red-400 flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> CONS
+                            </h3>
+                            <ul class="list-disc list-inside mt-4 space-y-2 text-gray-300">${consList}</ul>
+                        </div>
+                    </div>
+                    
+                    <div class="prose-content text-gray-300 space-y-6 text-lg">
+                        ${article.content.split('<!-- PROS/CONS -->')[1] || ''}
+                    </div>
+
+                    <div class="mt-12 bg-black/30 border border-purple-800/50 rounded-lg p-6 text-center">
+                        <h2 class="text-3xl font-bold" style="font-family: 'Press Start 2P', cursive;">Final Verdict</h2>
+                        <div class="my-4">
+                            <span class="text-7xl font-bold text-pink-400">${article.verdictScore.split('/')[0]}</span><span class="text-4xl text-gray-400">/${article.verdictScore.split('/')[1]}</span>
+                        </div>
+                        <div class="star-rating text-4xl mb-4">${starsHTML}</div>
+                        <p class="text-gray-300 max-w-2xl mx-auto">${article.verdictText}</p>
+                    </div>
+                </article>
+            `;
+        }
+
+        // --- ARTICLE LOADING LOGIC ---
+        async function loadArticle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleSlug = urlParams.get('slug');
+
+            if (!articleSlug) {
+                mainContent.innerHTML = `<h1 class="text-center text-3xl font-bold text-red-500">Article Not Found</h1>`;
+                return;
+            }
+
+            const articlesCollection = collection(db, 'articles');
+            const articleQuery = query(articlesCollection, where("slug", "==", articleSlug), limit(1));
+            
+            try {
+                const querySnapshot = await getDocs(articleQuery);
+                if (querySnapshot.empty) {
+                    mainContent.innerHTML = `<h1 class="text-center text-3xl font-bold text-red-500">Article Not Found</h1>`;
+                    return;
+                }
+
+                const article = querySnapshot.docs[0].data();
+                document.title = `${article.title} - Astro Jumpers`;
+
+                // Choose the correct template based on category
+                if (article.category === 'review') {
+                    mainContent.innerHTML = getReviewArticleHTML(article);
+                } else {
+                    mainContent.innerHTML = getNewsArticleHTML(article);
+                }
+
+            } catch (error) {
+                console.error("Error loading article:", error);
+                mainContent.innerHTML = `<h1 class="text-center text-3xl font-bold text-red-500">Error</h1>`;
+            }
+        }
+
+        loadArticle();
+    </script>
+</body>
+</html>
