@@ -187,7 +187,7 @@
              </div>
         </section>
         
-        <!-- SECTION 3: GAMING & TECH NEWS (MODIFIED FOR DYNAMIC CONTENT) -->
+        <!-- SECTION 3: GAMING & TECH NEWS (CORRECTED DYNAMIC CONTENT) -->
         <section id="news-section" class="max-w-4xl mx-auto">
             <div class="section-title-container">
                 <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Gaming & Tech News</h2>
@@ -199,7 +199,7 @@
             <a href="news-page.html" class="block text-center mt-6 text-purple-400 hover:text-purple-300 font-bold" style="font-family: 'Press Start 2P', cursive;">More News...</a>
         </section>
 
-        <!-- SECTION 4: PRODUCT REVIEWS (MODIFIED FOR DYNAMIC CONTENT) -->
+        <!-- SECTION 4: PRODUCT REVIEWS (CORRECTED DYNAMIC CONTENT) -->
         <section id="reviews-section" class="max-w-4xl mx-auto">
             <div class="section-title-container">
                 <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Product Reviews</h2>
@@ -293,17 +293,16 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // MODIFIED: Added 'where' and 'getDocs' for fetching articles
         import { getFirestore, collection, addDoc, query, onSnapshot, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- GLOBAL APP STATE & UI ELEMENTS (Original) ---
+        // --- GLOBAL APP STATE & UI ELEMENTS ---
         let db, auth, scoresCollection, leaderboard = [];
         const LEADERBOARD_SIZE = 10;
         const landingLeaderboardListEl = document.getElementById('landing-leaderboard-list');
         const hamburgerButton = document.getElementById('hamburger-button');
         const navMenu = document.getElementById('nav-menu');
         
-        // --- FIREBASE CONFIGURATION (Original) ---
+        // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyAt8HgMz-d0TIWFjSXtyNnostRs3ZNEbcM",
             authDomain: "astro-jumpers-leaderboard.firebaseapp.com",
@@ -313,7 +312,7 @@
             appId: "1:942651270371:web:22079e5986822ddd2b91d6"
         };
 
-        // --- NAVIGATION LOGIC (Original) ---
+        // --- NAVIGATION LOGIC ---
         hamburgerButton.addEventListener('click', () => {
             const isExpanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
             hamburgerButton.setAttribute('aria-expanded', !isExpanded);
@@ -346,7 +345,7 @@
             });
         });
 
-        // --- FIREBASE INITIALIZATION & DATA FETCHING (MODIFIED) ---
+        // --- FIREBASE INITIALIZATION & DATA FETCHING ---
         (async () => {
             if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
                 console.error("🔥 Firebase is not configured. Leaderboard will not work. Please add your Firebase project configuration to the script.");
@@ -360,10 +359,7 @@
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
                 else await signInAnonymously(auth);
                 
-                // Original calls
                 listenForScores(); 
-
-                // NEW: Fetch articles for the homepage
                 fetchHomepageArticles(); 
             } catch (e) {
                 console.error("Firebase initialization failed:", e);
@@ -371,7 +367,7 @@
             }
         })();
         
-        // --- LEADERBOARD FUNCTIONS (Original) ---
+        // --- LEADERBOARD FUNCTIONS ---
         function listenForScores() { 
             if (!scoresCollection) return; 
             const q = query(scoresCollection, orderBy("score", "desc"), limit(LEADERBOARD_SIZE)); 
@@ -435,17 +431,15 @@
             } 
         }
 
-        // --- NEW: ARTICLE FETCHING LOGIC ---
+        // --- ARTICLE FETCHING LOGIC ---
         async function fetchHomepageArticles() {
             const articlesCollection = collection(db, 'articles');
             const newsListContainer = document.getElementById('latest-news-list');
             const reviewsListContainer = document.getElementById('latest-reviews-list');
             
-            // Fetch latest 2 news articles
             const newsQuery = query(articlesCollection, where("category", "==", "news"), orderBy("publicationDate", "desc"), limit(2));
             populateArticleList(newsQuery, newsListContainer, createNewsCardHTML);
 
-            // Fetch latest 2 review articles
             const reviewsQuery = query(articlesCollection, where("category", "==", "review"), orderBy("publicationDate", "desc"), limit(2));
             populateArticleList(reviewsQuery, reviewsListContainer, createReviewCardHTML);
         }
@@ -457,7 +451,7 @@
                     container.innerHTML = `<p class="text-center text-gray-500">No articles found.</p>`;
                     return;
                 }
-                container.innerHTML = ''; // Clear loading message
+                container.innerHTML = '';
                 querySnapshot.forEach(doc => {
                     container.innerHTML += templateFunction(doc.data());
                 });
@@ -483,12 +477,15 @@
 
         function createReviewCardHTML(article) {
             const articleLink = `article.html?slug=${article.slug}`;
-            // This is based on your original review card HTML structure
+            const rating = article.rating || 0;
+            const starsHTML = '★'.repeat(rating) + '<span class="text-gray-500">' + '★'.repeat(5 - rating) + '</span>';
             return `
                  <a href="${articleLink}" class="flex bg-black/20 p-3 rounded-lg border border-transparent hover:border-purple-800/50 transition-colors duration-300">
                     <div class="flex-shrink-0 relative">
                         <img src="${article.imageUrl}" alt="${article.title}" class="w-32 h-20 md:w-40 md:h-24 object-cover rounded-md">
-                        <!-- You can add a star rating here in the future if you add it to your Firestore data -->
+                        <div class="absolute bottom-2 right-2 bg-black/60 px-2 py-1 rounded backdrop-blur-sm">
+                            <div class="star-rating text-lg">${starsHTML}</div>
+                        </div>
                     </div>
                     <div class="ml-4 flex-grow">
                         <h3 class="font-bold text-lg md:text-xl text-white">${article.title}</h3>
@@ -501,7 +498,7 @@
             `;
         }
 
-        // --- GAME LOGIC (Original and Unchanged) ---
+        // --- GAME LOGIC ---
         const initialStartButton = document.getElementById('initial-startButton');
         const gameFullscreenContainer = document.getElementById('game-fullscreen-container');
         const gameRuntimeContainer = document.getElementById('game-runtime-container');
@@ -530,7 +527,7 @@
         function draw() { ctx.clearRect(0, 0, canvas.width, canvas.height); if (!player) return; ctx.save(); ctx.translate(0, -cameraY); drawParticles(ctx); asteroids.forEach(asteroid => { ctx.fillStyle = '#9b7d60'; ctx.fillRect(asteroid.x, asteroid.y, asteroid.width, asteroid.height); ctx.fillStyle = '#c7a37f'; ctx.fillRect(asteroid.x, asteroid.y, asteroid.width, asteroid.height - 15); }); if (pressStartTime > 0 && player.isGrounded) { const pressDuration = Date.now() - pressStartTime; const maxPressDuration = 500; const pressRatio = Math.min(pressDuration, maxPressDuration) / maxPressDuration; const meterWidth = 50, meterHeight = 8; const meterX = player.x + (player.width / 2) - (meterWidth / 2); const meterY = player.y - 20; ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.fillRect(meterX, meterY, meterWidth, meterHeight); const gradient = ctx.createLinearGradient(meterX, meterY, meterX + meterWidth, meterY); gradient.addColorStop(0, '#86efac'); gradient.addColorStop(0.7, '#facc15'); gradient.addColorStop(1, '#ef4444'); ctx.fillStyle = gradient; ctx.fillRect(meterX, meterY, meterWidth * pressRatio, meterHeight); }  const frame = player.jumpFrame || 0; const bob = player.isGrounded ? Math.sin(Date.now() / 150) * 1.5 : 0; const px = player.x; const py = player.y + bob; const pw = player.width; const ph = player.height; switch (selectedCharacter) { case 'astronaut': { ctx.fillStyle = '#6b7280'; ctx.fillRect(px - 2, py + ph * 0.25, pw + 4, ph * 0.5); ctx.fillStyle = '#e5e7eb'; ctx.fillRect(px, py + ph * 0.2, pw, ph * 0.7); ctx.fillStyle = '#d1d5db'; if (!player.isGrounded) { ctx.fillRect(px + pw * 0.2, py + ph * 0.85, 5, 5); ctx.fillRect(px + pw * 0.6, py + ph * 0.85, 5, 5); } else { ctx.fillRect(px + pw * 0.2, py + ph * 0.85, 5, 8); ctx.fillRect(px + pw * 0.6, py + ph * 0.85, 5, 8); } ctx.fillStyle = '#f9fafb'; ctx.beginPath(); ctx.arc(px + pw / 2, py + ph * 0.2, pw / 2 + 2, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#111827'; ctx.beginPath(); ctx.arc(px + pw / 2, py + ph * 0.2, pw / 2 - 1, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.beginPath(); ctx.arc(px + pw * 0.65, py + ph * 0.1, pw/5, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = 'rgba(229, 231, 235, 0.5)'; ctx.beginPath(); ctx.arc(px + pw * 0.35, py + ph * 0.2, 2, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(px + pw * 0.65, py + ph * 0.2, 2, 0, Math.PI*2); ctx.fill(); if (!player.isGrounded) { const flameSize = Math.sin(frame * 0.4) * 8 + 12; ctx.fillStyle = `rgba(252, 211, 77, ${Math.random() * 0.5 + 0.5})`; ctx.beginPath(); ctx.moveTo(px + pw * 0.3, py + ph * 0.7); ctx.lineTo(px + pw * 0.7, py + ph * 0.7); ctx.lineTo(px + pw / 2, py + ph * 0.7 + flameSize); ctx.closePath(); ctx.fill(); ctx.fillStyle = `rgba(249, 115, 22, ${Math.random() * 0.5 + 0.5})`; ctx.beginPath(); ctx.moveTo(px + pw * 0.4, py + ph * 0.7); ctx.lineTo(px + pw * 0.6, py + ph * 0.7); ctx.lineTo(px + pw / 2, py + ph * 0.7 + flameSize * 0.6); ctx.closePath(); ctx.fill(); } break; } case 'alien': { ctx.fillStyle = '#4d1b7b'; ctx.fillRect(px - 2, py + ph * 0.25, pw + 4, ph * 0.5); ctx.fillStyle = '#4ade80'; ctx.beginPath(); ctx.ellipse(px + pw / 2, py + ph * 0.6, pw / 2, ph * 0.4, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#22c55e'; if (!player.isGrounded) { ctx.fillRect(px + pw * 0.2, py + ph * 0.85, 5, 5); ctx.fillRect(px + pw * 0.6, py + ph * 0.85, 5, 5); } else { ctx.fillRect(px + pw * 0.2, py + ph * 0.85, 5, 8); ctx.fillRect(px + pw * 0.6, py + ph * 0.85, 5, 8); } ctx.fillStyle = '#f0fdf4'; ctx.beginPath(); ctx.arc(px + pw / 2, py + ph * 0.25, pw / 2 + 2, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#111827'; ctx.beginPath(); ctx.arc(px + pw / 2, py + ph * 0.25, 4, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px + pw / 2, py + ph * 0.1); ctx.lineTo(px + pw / 2, py - 5); ctx.stroke(); ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(px + pw / 2, py - 7, 3, 0, Math.PI * 2); ctx.fill(); if (!player.isGrounded) { const flameSize = Math.sin(frame * 0.4) * 8 + 12; ctx.fillStyle = `rgba(192, 132, 252, ${Math.random() * 0.5 + 0.5})`; ctx.beginPath(); ctx.moveTo(px + pw * 0.3, py + ph * 0.7); ctx.lineTo(px + pw * 0.7, py + ph * 0.7); ctx.lineTo(px + pw / 2, py + ph * 0.7 + flameSize); ctx.closePath(); ctx.fill(); } break; } case 'robot': { ctx.fillStyle = '#4b5563'; ctx.fillRect(px - 2, py + ph * 0.6, pw/2 - 1, ph * 0.3); ctx.fillRect(px + pw/2 + 3, py + ph * 0.6, pw/2 - 1, ph * 0.3); ctx.fillStyle = '#9ca3af'; ctx.fillRect(px, py + ph * 0.2, pw, ph * 0.7); ctx.fillStyle = '#6b7280'; if (!player.isGrounded) { ctx.fillRect(px + pw * 0.2, py + ph * 0.85, 5, 5); ctx.fillRect(px + pw * 0.6, py + ph * 0.85, 5, 5); } else { ctx.fillRect(px + pw * 0.2, py + ph * 0.85, 5, 8); ctx.fillRect(px + pw * 0.6, py + ph * 0.85, 5, 8); } ctx.fillStyle = '#d1d5db'; ctx.fillRect(px, py, pw, ph * 0.3); ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(px + pw / 2, py + ph * 0.15, 4, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = 'rgba(255, 100, 100, 0.5)'; ctx.beginPath(); ctx.arc(px + pw / 2, py + ph * 0.15, 8, 0, Math.PI * 2); ctx.fill(); if (!player.isGrounded) { const flameSize = Math.sin(frame * 0.4) * 8 + 12; ctx.fillStyle = 'rgba(59, 130, 246, 0.8)'; ctx.beginPath(); ctx.moveTo(px - 2, py + ph * 0.9); ctx.lineTo(px + pw/2 - 1, py + ph * 0.9); ctx.lineTo(px + pw/4 - 1.5, py + ph * 0.9 + flameSize); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(px + pw/2 + 3, py + ph * 0.9); ctx.lineTo(px + pw + 2, py + ph * 0.9); ctx.lineTo(px + pw * 0.75 + 1.5, py + ph * 0.9 + flameSize); ctx.closePath(); ctx.fill(); } break; } } ctx.restore(); }
         function gameLoop() { update(); draw(); if (isGameRunning) requestAnimationFrame(gameLoop); }
         
-        // --- Event Listeners (Original and Unchanged) ---
+        // --- Event Listeners ---
         function setupCharacterSelection() {
             const updateSelection = (character) => {
                 selectedCharacter = character;
@@ -581,6 +578,9 @@
 
 </body>
 </html>
+
+
+
 
 
 
