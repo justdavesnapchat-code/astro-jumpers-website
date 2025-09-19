@@ -204,16 +204,12 @@
 
     <div id="game-fullscreen-container" class="invisible opacity-0 pointer-events-none transition-opacity duration-300 fixed top-0 left-0 w-screen h-screen z-[100]">
         <div id="ad-banner-top" class="absolute top-0 left-0 w-full h-[60px] flex items-center justify-center bg-black/50">
-          <script type="text/javascript">
-	atOptions = {
-		'key' : 'de06b238b5972130f48d3e46c9015a38',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/de06b238b5972130f48d3e46c9015a38/invoke.js"></script>
+             <!-- 
+            ==================================================================
+            THIS CONTAINER IS NOW DYNAMICALLY FILLED.
+            DELETE ANY SCRIPT TAGS YOU PASTED HERE MANUALLY.
+            ==================================================================
+            -->
         </div>
         <div id="game-runtime-container" class="relative w-full h-full">
             <div id="score" class="hud top-[80px] text-2xl md:text-4xl">SCORE: 0</div>
@@ -276,6 +272,11 @@
             let isGameRunning = false; let score = 0; let highScore = localStorage.getItem('astroJumperHighScore') || 0; let cameraY = 0; let player, asteroids, particles; let pressStartTime = 0; let lastClickX = 0; let jumpDirection = 1; let currentLevelIndex = 0; let selectedCharacter = localStorage.getItem('astroJumperCharacter') || 'astronaut';
             const levels = [{ threshold: 0, bgColor: '#0c0a1a' },{ threshold: 100, bgColor: '#1a122a' },{ threshold: 200, bgColor: '#2a1a3c' },{ threshold: 300, bgColor: '#3c1f4f' },{ threshold: 400, bgColor: '#4a1a3c' },{ threshold: 500, bgColor: '#5a2a2a' },{ threshold: 750, bgColor: '#4a3a2a' },{ threshold: 1000, bgColor: '#2a5a2a' },{ threshold: 1500, bgColor: '#2a5a5a' },{ threshold: 2000, bgColor: '#3a3a5a' },];
             let synth, landSynth, gameOverSynth; 
+            
+            // --- Ad Variables ---
+            let isGameAdLoaded = false;
+            // IMPORTANT: PASTE YOUR 320x50 AD SCRIPT'S URL HERE
+            const gameAdScriptSrc = "//www.highperformanceformat.com/de06b238b5972130f48d3e46c9015a38/invoke.js";
 
             // --- All Game and UI Functions ---
             function setupSounds() { if (typeof Tone === 'undefined' || Tone.context.state !== 'running') return; synth = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination(); landSynth = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.1 } }).toDestination(); gameOverSynth = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.1, release: 0.5 } }).toDestination(); }
@@ -339,10 +340,27 @@
                 });
             });
 
+            function loadGameAd() {
+                if (isGameAdLoaded || !gameAdScriptSrc || gameAdScriptSrc === "PASTE_YOUR_ADSTERRA_SCRIPT_URL_HERE") return;
+
+                const adContainer = document.getElementById('ad-banner-top');
+                if (adContainer) {
+                    const adScript = document.createElement('script');
+                    adScript.type = 'text/javascript';
+                    adScript.src = gameAdScriptSrc;
+                    adContainer.innerHTML = ''; // Clear previous contents
+                    adContainer.appendChild(adScript);
+                    isGameAdLoaded = true;
+                }
+            }
+
             initialStartButton.addEventListener('click', () => {
                 gameRuntimeContainer.prepend(canvas);
                 gameFullscreenContainer.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
                 gameFullscreenContainer.classList.add('visible', 'opacity-100', 'pointer-events-auto');
+                
+                loadGameAd(); // Load the ad when the game screen becomes visible
+
                 document.body.style.overflow = 'hidden';
                 init();
                 startGame();
@@ -487,4 +505,5 @@
     </script>
 </body>
 </html>
+
 
