@@ -73,10 +73,7 @@
         async function loadArticle(db) {
             function getNewsArticleHTML(article) {
                 const pubDate = article.publicationDate.toDate().toLocaleDateString();
-                const adPlaceholder = `<div class="my-8 flex justify-center"><!-- 
-                    <script async="async" data-cfasync="false" src="//pl27677248.revenuecpmgate.com/8873ece509e6a4b94d894a8e19a8372a/invoke.js"></script>
-<div id="container-8873ece509e6a4b94d894a8e19a8372a"></div>
-                    --></div>`;     
+                  
                 return `<article><header class="mb-8"><div class="section-title-container"><p class="text-center text-purple-400 font-bold tracking-wider" style="font-family: 'Press Start 2P', cursive;">${article.category}</p><h1 class="text-3xl md:text-5xl font-bold text-center text-white mt-4" style="font-family: 'Space Grotesk', sans-serif;">${article.title}</h1></div><p class="text-center text-gray-400 mt-4"><span>By ${article.author}</span> | <time>${pubDate}</time></p></header><img src="${article.imageUrl}" alt="${article.title}" class="w-full h-auto rounded-lg shadow-lg mb-8"><div class="prose-content text-gray-300 space-y-6 text-lg">${article.content}</div></article>`;
             }
             function getReviewArticleHTML(article) {
