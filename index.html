@@ -8,12 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- 
-    ==================================================================
-    1. PASTE YOUR MAIN ADSTERRA POP-UNDER / SOCIAL BAR SCRIPT CODE HERE
-    ==================================================================
-    -->
-
     <style>
         :root { --background-dark: #0c0a1a; --primary-purple: #6c25be; --primary-pink: #da4ea2; }
         body { background-color: var(--background-dark); color: #ffffff; font-family: 'Space Grotesk', sans-serif; touch-action: manipulation; }
@@ -81,67 +75,98 @@
         </div>
     </header>
 
-    <main id="main-content" class="max-w-7xl mx-auto p-4 space-y-12 md:space-y-16">
-        <section id="game-section-container" class="w-full pt-8 md:pt-12">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-6xl font-bold text-glow" style="font-family: 'Press Start 2P', cursive;">PLAY THE VIRAL GAME</h1>
-                <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">The internet is hooked, but can you survive? Jump your way to the top of the LIVE global leaderboard and prove you're the best jumper in the galaxy!</p>
-            </div>
-             <div id="game-wrapper" class="w-full h-[60vh] md:h-[70vh] max-h-[800px] rounded-2xl overflow-hidden border-2 border-purple-800/50 relative bg-black shadow-2xl shadow-purple-900/50">
-                <canvas id="gameCanvas"></canvas>
-                <div id="initial-start-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-black/50 p-4">
-                    <div class="text-center flex flex-col items-center gap-2 sm:gap-4">
-                        <p class="text-xs sm:text-sm md:text-base mb-2">Hold to charge jump.<br>Aim, or click center to go up!</p>
-                        <p class="text-xs uppercase tracking-widest">Choose Your Hero</p>
-                        <div class="flex justify-center gap-2 sm:gap-4 mb-2">
-                             <div class="character-option p-2 border-2 border-transparent rounded-lg cursor-pointer transition-all" data-character="astronaut"><div title="Astronaut" class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md flex items-center justify-center overflow-hidden"><svg viewBox="0 0 30 45" class="h-10 sm:h-12"><g fill="#e5e7eb"><rect x="2.5" y="11" width="25" height="28"/><path d="M15 4c-6 0-11 6-11 12v1H15Z"/><path d="M15 4c6 0 11 6 11 12v1H15Z"/></g><circle cx="15" cy="17" r="9" fill="#111827"/><circle cx="19" cy="15" r="3" fill="rgba(255,255,255,0.3)"/><path d="M3 30 l-5 7 h10 Z" fill="#6b7280"/><path d="M27 30 l5 7 h-10 Z" fill="#6b7280"/></svg></div></div>
-                             <div class="character-option p-2 border-2 border-transparent rounded-lg cursor-pointer transition-all" data-character="alien"><div title="Alien" class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md flex items-center justify-center overflow-hidden"><svg viewBox="0 0 30 45" class="h-10 sm:h-12"><ellipse cx="15" cy="25" rx="14" ry="16" fill="#4ade80"/><circle cx="15" cy="18" r="10" fill="#f0fdf4"/><circle cx="15" cy="18" r="4" fill="#111827"/><path d="M15 8 L 15 2" stroke="#22c55e" stroke-width="2"/><circle cx="15" cy="2" r="3" fill="#f43f5e"/></svg></div></div>
-                             <div class="character-option p-2 border-2 border-transparent rounded-lg cursor-pointer transition-all" data-character="robot"><div title="Robot" class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md flex items-center justify-center overflow-hidden"><svg viewBox="0 0 30 45" class="h-10 sm:h-12"><rect x="2" y="2" width="26" height="12" fill="#d1d5db"/><rect x="2" y="14" width="26" height="28" fill="#9ca3af"/><circle cx="15" cy="8" r="4" fill="#ef4444"/><circle cx="15" cy="8" r="8" fill="rgba(255,100,100,0.5)"/></svg></div></div>
+    <div class="max-w-screen-xl mx-auto flex justify-center gap-x-4 lg:gap-x-8 px-4">
+        <!-- Left Skyscraper Ad Panel -->
+        <aside class="w-[160px] flex-shrink-0 hidden lg:block sticky top-20 h-screen">
+            <!-- 
+            ==================================================================
+            PASTE YOUR 160x600 SKYSCRAPER AD CODE HERE
+            ==================================================================
+            -->
+        </aside>
+
+        <!-- Main Content Column -->
+        <main id="main-content" class="flex-grow max-w-7xl p-0 space-y-12 md:space-y-16">
+            <section id="game-section-container" class="w-full pt-8 md:pt-12">
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl md:text-6xl font-bold text-glow" style="font-family: 'Press Start 2P', cursive;">PLAY THE VIRAL GAME</h1>
+                    <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">The internet is hooked, but can you survive? Jump your way to the top of the LIVE global leaderboard and prove you're the best jumper in the galaxy!</p>
+                </div>
+                 <div id="game-wrapper" class="w-full h-[60vh] md:h-[70vh] max-h-[800px] rounded-2xl overflow-hidden border-2 border-purple-800/50 relative bg-black shadow-2xl shadow-purple-900/50">
+                    <canvas id="gameCanvas"></canvas>
+                    <div id="initial-start-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-black/50 p-4">
+                        <div class="text-center flex flex-col items-center gap-2 sm:gap-4">
+                            <p class="text-xs sm:text-sm md:text-base mb-2">Hold to charge jump.<br>Aim, or click center to go up!</p>
+                            <p class="text-xs uppercase tracking-widest">Choose Your Hero</p>
+                            <div class="flex justify-center gap-2 sm:gap-4 mb-2">
+                                 <div class="character-option p-2 border-2 border-transparent rounded-lg cursor-pointer transition-all" data-character="astronaut"><div title="Astronaut" class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md flex items-center justify-center overflow-hidden"><svg viewBox="0 0 30 45" class="h-10 sm:h-12"><g fill="#e5e7eb"><rect x="2.5" y="11" width="25" height="28"/><path d="M15 4c-6 0-11 6-11 12v1H15Z"/><path d="M15 4c6 0 11 6 11 12v1H15Z"/></g><circle cx="15" cy="17" r="9" fill="#111827"/><circle cx="19" cy="15" r="3" fill="rgba(255,255,255,0.3)"/><path d="M3 30 l-5 7 h10 Z" fill="#6b7280"/><path d="M27 30 l5 7 h-10 Z" fill="#6b7280"/></svg></div></div>
+                                 <div class="character-option p-2 border-2 border-transparent rounded-lg cursor-pointer transition-all" data-character="alien"><div title="Alien" class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md flex items-center justify-center overflow-hidden"><svg viewBox="0 0 30 45" class="h-10 sm:h-12"><ellipse cx="15" cy="25" rx="14" ry="16" fill="#4ade80"/><circle cx="15" cy="18" r="10" fill="#f0fdf4"/><circle cx="15" cy="18" r="4" fill="#111827"/><path d="M15 8 L 15 2" stroke="#22c55e" stroke-width="2"/><circle cx="15" cy="2" r="3" fill="#f43f5e"/></svg></div></div>
+                                 <div class="character-option p-2 border-2 border-transparent rounded-lg cursor-pointer transition-all" data-character="robot"><div title="Robot" class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md flex items-center justify-center overflow-hidden"><svg viewBox="0 0 30 45" class="h-10 sm:h-12"><rect x="2" y="2" width="26" height="12" fill="#d1d5db"/><rect x="2" y="14" width="26" height="28" fill="#9ca3af"/><circle cx="15" cy="8" r="4" fill="#ef4444"/><circle cx="15" cy="8" r="8" fill="rgba(255,100,100,0.5)"/></svg></div></div>
+                            </div>
+                            <button id="initial-startButton" class="btn text-base sm:text-xl py-2 px-4">START GAME</button>
                         </div>
-                        <button id="initial-startButton" class="btn text-base sm:text-xl py-2 px-4">START GAME</button>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="leaderboard-container" class="bg-black/30 rounded-2xl p-4 md:p-6 border border-purple-800/50 max-w-2xl mx-auto">
-            <div class="section-title-container">
-                 <h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-x-3" style="font-family: 'Press Start 2P', cursive;">
-                    <span class="live-dot"></span>
-                    <span>LIVE GLOBAL LEADERBOARD</span>
-                 </h2>
-            </div>
-             <div id="landing-leaderboard-list" class="space-y-2 mt-6">
-                 <div class="text-center text-gray-400">Loading scores...</div>
-             </div>
-        </section>
-        
-        <section id="news-section" class="max-w-4xl mx-auto">
-            <div class="section-title-container">
-                <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Gaming & Tech News</h2>
-            </div>
-            <div id="latest-news-list" class="space-y-4 mt-6">
-                <p class="text-center text-gray-400">Loading latest news...</p>
-            </div>
-            <div class="text-center mt-8">
-                <a href="news-page.html" class="btn-neon text-sm">More News...</a>
-            </div>
-        </section>
-<script async="async" data-cfasync="false" src="//pl27677248.revenuecpmgate.com/8873ece509e6a4b94d894a8e19a8372a/invoke.js"></script>
-<div id="container-8873ece509e6a4b94d894a8e19a8372a"></div>
-		</section>
-        <section id="reviews-section" class="max-w-4xl mx-auto">
-             <div class="section-title-container">
-                <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Product Reviews</h2>
-            </div>
-            <div id="latest-reviews-list" class="space-y-4 mt-6">
-                 <p class="text-center text-gray-400">Loading latest reviews...</p>
-            </div>
-             <div class="text-center mt-8">
-                <a href="reviews-page.html" class="btn-neon text-sm">More Reviews...</a>
-            </div>
-        </section>
-    </main>
+            <section id="leaderboard-container" class="bg-black/30 rounded-2xl p-4 md:p-6 border border-purple-800/50 max-w-2xl mx-auto">
+                <div class="section-title-container">
+                     <h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-x-3" style="font-family: 'Press Start 2P', cursive;">
+                        <span class="live-dot"></span>
+                        <span>LIVE GLOBAL LEADERBOARD</span>
+                     </h2>
+                </div>
+                 <div id="landing-leaderboard-list" class="space-y-2 mt-6">
+                     <div class="text-center text-gray-400">Loading scores...</div>
+                 </div>
+            </section>
+            
+            <section id="news-section" class="max-w-4xl mx-auto">
+                <div class="section-title-container">
+                    <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Gaming & Tech News</h2>
+                </div>
+                <div id="latest-news-list" class="space-y-4 mt-6">
+                    <p class="text-center text-gray-400">Loading latest news...</p>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="news-page.html" class="btn-neon text-sm">More News...</a>
+                </div>
+            </section>
+
+            <!-- Adsterra Banner Ad Section -->
+            <section id="ad-homepage-banner" class="w-full my-8 flex justify-center items-center overflow-hidden px-2">
+                <!-- 
+                ==================================================================
+                PASTE YOUR 728x90 HOMEPAGE BANNER CODE HERE
+                Your ad code will be placed here. This container will handle
+                centering and responsiveness.
+                ==================================================================
+                -->
+            </section>
+
+            <section id="reviews-section" class="max-w-4xl mx-auto">
+                 <div class="section-title-container">
+                    <h2 class="text-2xl md:text-3xl font-bold text-center" style="font-family: 'Press Start 2P', cursive;">Product Reviews</h2>
+                </div>
+                <div id="latest-reviews-list" class="space-y-4 mt-6">
+                     <p class="text-center text-gray-400">Loading latest reviews...</p>
+                </div>
+                 <div class="text-center mt-8">
+                    <a href="reviews-page.html" class="btn-neon text-sm">More Reviews...</a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Skyscraper Ad Panel -->
+        <aside class="w-[160px] flex-shrink-0 hidden lg:block sticky top-20 h-screen">
+            <!-- 
+            ==================================================================
+            PASTE YOUR 160x600 SKYSCRAPER AD CODE HERE
+            ==================================================================
+            -->
+        </aside>
+    </div>
+
 
     <footer class="bg-black/30 border-t border-purple-800/50 mt-16">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -177,19 +202,14 @@
         </div>
     </footer>
 
-   <div id="game-fullscreen-container" class="hidden fixed top-0 left-0 w-screen h-screen z-[100]">
+    <div id="game-fullscreen-container" class="invisible opacity-0 pointer-events-none transition-opacity duration-300 fixed top-0 left-0 w-screen h-screen z-[100]">
         <div id="ad-banner-top" class="absolute top-0 left-0 w-full h-[60px] flex items-center justify-center bg-black/50">
-			<script type="text/javascript">
-	atOptions = {
-		'key' : 'de06b238b5972130f48d3e46c9015a38',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/de06b238b5972130f48d3e46c9015a38/invoke.js"></script>
-</div>
+             <!-- 
+            ==================================================================
+            PASTE YOUR 320x50 GAME BANNER CODE HERE
+            ==================================================================
+            -->
+        </div>
         <div id="game-runtime-container" class="relative w-full h-full">
             <div id="score" class="hud top-[80px] text-2xl md:text-4xl">SCORE: 0</div>
             <div id="highScore" class="hud top-[130px] md:top-[140px] text-lg md:text-xl opacity-70">BEST: 0</div>
@@ -316,7 +336,8 @@
 
             initialStartButton.addEventListener('click', () => {
                 gameRuntimeContainer.prepend(canvas);
-                gameFullscreenContainer.classList.remove('hidden');
+                gameFullscreenContainer.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+                gameFullscreenContainer.classList.add('visible', 'opacity-100', 'pointer-events-auto');
                 document.body.style.overflow = 'hidden';
                 init();
                 startGame();
@@ -324,7 +345,8 @@
             exitGameButton.addEventListener('click', () => {
                 isGameRunning = false;
                 document.getElementById('game-wrapper').prepend(canvas);
-                gameFullscreenContainer.classList.add('hidden');
+                gameFullscreenContainer.classList.add('invisible', 'opacity-0', 'pointer-events-none');
+                gameFullscreenContainer.classList.remove('visible', 'opacity-100', 'pointer-events-auto');
                 document.body.style.overflow = 'auto';
             });
 
@@ -460,5 +482,4 @@
     </script>
 </body>
 </html>
-
 
